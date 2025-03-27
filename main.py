@@ -5,15 +5,11 @@ import os
 
 app = Flask(__name__)
 
-# Excel faila atrašanās vieta
 EXCEL_FILE = "info_kopsavilkums.xlsx"
 BASE_DIR = os.getcwd()
-
-# Fails komentāru saglabāšanai
 COMMENTS_FILE = "comments.txt"
 
 def read_excel():
-    """Nolasa Excel failu un izveido sarakstu ar kaķu informāciju."""
     try:
         wb = load_workbook(EXCEL_FILE)
         sheet = wb.active
@@ -39,17 +35,13 @@ def read_excel():
 
 @app.route('/')
 def home():
-    """Galvenā lapa ar kaķu sarakstu un attēliem."""
     order = request.args.get("order", "asc")
     cats = read_excel()
-
-    # Sakārtojam kaķus pēc nosaukuma
     cats = sorted(cats, key=lambda x: x["Nosaukums"], reverse=(order == "desc"))
     return render_template('index.html', cats=cats, order=order)
 
 @app.route('/cat/<path:name>')
 def cat_detail(name):
-    """Atsevišķa kaķa detalizētā informācija."""
     cats = read_excel()
     decoded_name = urllib.parse.unquote(name).replace('-', ' ')
     
@@ -62,12 +54,10 @@ def cat_detail(name):
 
 @app.route('/image/<filename>')
 def get_image(filename):
-    """Attēlu apkalpošana."""
     return send_from_directory(BASE_DIR, filename)
 
 @app.route('/comments', methods=["GET", "POST"])
 def comments():
-    """Lapa komentāru rakstīšanai un skatīšanai."""
     if request.method == "POST":
         comment = request.form.get("comment")
         if comment:
@@ -85,7 +75,6 @@ def comments():
 
 @app.route('/delete_comment/<int:comment_index>', methods=["POST"])
 def delete_comment(comment_index):
-    """Dzēš konkrētu komentāru pēc tā indeksa."""
     if os.path.exists(COMMENTS_FILE):
         with open(COMMENTS_FILE, "r", encoding="utf-8") as file:
             comments = file.readlines()
