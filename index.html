@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sarkanās grāmatas kaķi</title>
+  <subtitle> Šajā mājaslapā tika manuāli apkopoti dati par kaķu dzimtas dzīvniekiem, kas atrodas sarkanajā grāmatā. Mēs neesam atbildīgi par informācijas patiesību. :P</subtitle>
+  <style>
+    body {
+      font-family: Georgia, sans-serif;
+      background-color: #FFB41B;
+      margin: 0;
+      padding: 0;
+    }
+    
+    h1 {
+      text-align: center;
+      padding: 20px;
+      color: #002A28;
+    }
+
+    .sort-buttons {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .sort-buttons a {
+      margin: 0 10px;
+      padding: 10px 15px;
+      background-color: #145048;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .grid-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+    
+    .cat-card {
+      background-color: #E46129;
+      border: 1px solid #952710;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 15px;
+      font-family: Georgia, 'Times New Roman', Times, serif
+    }
+    
+    .cat-card img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .details-link {
+      margin-top: 15px;
+      text-decoration: none;
+      color: #145048;
+      font-weight: bold;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    .chart-links {
+      text-align: center;
+      margin-top: 30px;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    .chart-links a {
+      display: block;
+      margin: 10px auto;
+      text-decoration: none;
+      color: #145048;
+      font-weight: bold;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    #lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Sarkanās grāmatas kaķi</h1>
+
+  <div class="sort-buttons">
+    <a href="/?order=asc">Kārtot A-Z</a>
+    <a href="/?order=desc">Kārtot Z-A</a>
+  </div>
+
+  <div class="grid-container">
+    {% for cat in cats %}
+    <div class="cat-card">
+      <img src="{{ cat['Attēls'] }}" alt="{{ cat['Nosaukums'] }}">
+      <h2>{{ cat['Nosaukums'] }}</h2>
+      <a href="{{ url_for('cat_detail', name=cat['Nosaukums'].replace(' ', '-')) }}" class="details-link">
+        Apskatīt sīkāk
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="chart-links">
+    <h2>Analītiskās diagrammas</h2>
+    <a href="#" onclick="openLightbox('/image/ekoloģija.jpg')">Biotops un ekoloģija</a>
+    <a href="#" onclick="openLightbox('/image/gads.jpg')">Pēdējās novērtēšanas gads</a>
+    <a href="#" onclick="openLightbox('/image/mēnesis.jpg')">Pēdējās novērtēšanas mēnesis</a>
+    <a href="#" onclick="openLightbox('/image/apdraudejums.jpg')">Apdraudējums</a>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px;">
+      <a href="/comments" style="text-decoration: none; font-weight: bold; color: #145048;">
+          Rakstīt komentāru
+      </a>
+  </div>
+
+  <div id="lightbox" onclick="closeLightbox()">
+    <span class="close">&times;</span>
+    <img id="lightbox-img" src="">
+  </div>
+
+  <script>
+    function openLightbox(imageSrc) {
+      document.getElementById("lightbox-img").src = imageSrc;
+      document.getElementById("lightbox").style.display = "flex";
+    }
+
+    function closeLightbox() {
+      document.getElementById("lightbox").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
