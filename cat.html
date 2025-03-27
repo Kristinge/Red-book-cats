@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cat['Nosaukums'] }}</title>
+    <style>
+        body {
+            background-color: #FFB41B;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            text-align: left;
+            border: 1px solid #952710;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #E46129;
+        }
+        h1 {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            color: #002A28;
+        }
+        p {
+            font-size: 18px;
+        }
+        .back {
+            margin-top: 20px;
+            display: block;
+            font-size: 16px;
+            text-decoration: none;
+            color: #145048;
+        }
+        .back:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ cat['Nosaukums'] }}</h1>
+        <p><strong>Biotops un ekoloģija:</strong> {{ cat['Biotops un ekoloģija'] }}</p>
+        <p><strong>Pēdējās novērtēšanas datums:</strong> {{ cat['Pēdējās novērtēšanas gads'] }}-{{ cat['Pēdējās novērtēšanas mēnesis'] }}</p>
+        <p><strong>Valstis:</strong> {{ cat['Valstis'] }}</p>
+        <p><strong>Apdraudējums:</strong> {{ cat['Apdraudējums'] }}</p>
+        <p><strong>Skaits savvaļā:</strong> {{ cat['Skaits savvaļā'] }}</p>
+        <a href="{{ url_for('home') }}" class="back">Atpakaļ uz sarakstu</a>
+    </div>
+</body>
+</html>
