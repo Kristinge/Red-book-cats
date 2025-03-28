@@ -1,19 +1,25 @@
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for
-from openpyxl import load_workbook
-import urllib.parse
+from flask import Flask, render_template, send_from_directory, request, redirect, url_for, send_file
+from openpyxl import load_workbook, Workbook
+import matplotlib.pyplot as plt
 import os
+import urllib  # Added missing import
 
 app = Flask(__name__)
 
-EXCEL_FILE = "info_kopsavilkums.xlsx"
+EXCEL_FILE = os.path.join(os.getcwd(), "info_kopsavilkums.xlsx")  # Ensure platform-independent paths
 BASE_DIR = os.getcwd()
-COMMENTS_FILE = "comments.txt"
+COMMENTS_FILE = os.path.join(BASE_DIR, "comments.txt")
+CHART_FILE = os.path.join(BASE_DIR, "biotops_ekologija.png")
+DEFAULT_IMAGE = os.path.join(BASE_DIR, "default.jpg")  # Ensure a default image file exists
 
 def read_excel():
     try:
+        if not os.path.exists(EXCEL_FILE):
+            return [{"Kļūda": "Excel fails netika atrasts!"}]
+        
         wb = load_workbook(EXCEL_FILE)
         sheet = wb.active
-        headers = [cell.value for cell in sheet[1]]
+        headers = [cell.value for cell in sheet[1] if cell.value]  # Safeguard for missing headers
         cats = []
 
         for row in sheet.iter_rows(min_row=2, values_only=True):
@@ -22,10 +28,7 @@ def read_excel():
             image_filename = f"{cat_name}.jpg"
             image_path = os.path.join(BASE_DIR, image_filename)
 
-            if os.path.exists(image_path):
-                cat_info["Attēls"] = f"/image/{image_filename}"
-            else:
-                cat_info["Attēls"] = "/image/default.jpg"
+            cat_info["Attēls"] = f"/image/{image_filename}" if os.path.exists(image_path) else f"/image/{DEFAULT_IMAGE}"
 
             cats.append(cat_info)
 
@@ -37,7 +40,7 @@ def read_excel():
 def home():
     order = request.args.get("order", "asc")
     cats = read_excel()
-    cats = sorted(cats, key=lambda x: x["Nosaukums"], reverse=(order == "desc"))
+    cats = sorted(cats, key=lambda x: x.get("Nosaukums", ""), reverse=(order == "desc"))  # Use get to avoid KeyError
     return render_template('index.html', cats=cats, order=order)
 
 @app.route('/cat/<path:name>')
@@ -86,6 +89,56 @@ def delete_comment(comment_index):
                 file.writelines(comments)
 
     return redirect(url_for('comments'))
+
+@app.route('/download')
+def download_excel():
+    try:
+        wb = Workbook()
+        sheet = wb.active
+        sheet.title = "Kaķi"
+
+        cats = read_excel()
+        
+        if cats and isinstance(cats, list) and isinstance(cats[0], dict):
+            headers = cats[0].keys()
+            sheet.append(list(headers))
+
+            for cat in cats:
+                sheet.append([cat.get(key, "") for key in headers])
+        else:
+            return "Nav derīgu datu, ko eksportēt!", 400
+
+        download_path = os.path.join(BASE_DIR, "info_kopsavilkums.xlsx")
+        wb.save(download_path)
+
+        return send_file(download_path, as_attachment=True, download_name="info_kopsavilkums.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+    except Exception as e:
+        return f"Kļūda ģenerējot failu: {e}", 500
+
+@app.route('/chart')
+def generate_chart():
+    try:
+        cats = read_excel()
+        biotops_count = {}
+        for cat in cats:
+            biotops = cat.get("Biotops un ekoloģija", "Nepieejams")
+            biotops_count[str(biotops)] = biotops_count.get(str(biotops), 0) + 1
+
+        plt.figure(figsize=(10, 6))
+        plt.bar(biotops_count.keys(), biotops_count.values(), color='skyblue')
+        plt.title("Biotops un ekoloģija")
+        plt.xlabel("Biotops")
+        plt.ylabel("Skaits")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+
+        chart_path = os.path.join(BASE_DIR, CHART_FILE)
+        plt.savefig(chart_path)
+
+        return send_file(chart_path, mimetype='image/png', as_attachment=True, download_name=CHART_FILE)
+    except Exception as e:
+        return f"Kļūda veidojot diagrammu: {e}", 500
 
 if __name__ == '__main__':
     app.run(debug=True)
