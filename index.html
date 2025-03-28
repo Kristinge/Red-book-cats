@@ -4,19 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sarkanās grāmatas kaķi</title>
-  <subtitle> Šajā mājaslapā tika manuāli apkopoti dati par kaķu dzimtas dzīvniekiem, kas atrodas sarkanajā grāmatā. Mēs neesam atbildīgi par informācijas patiesību. :P</subtitle>
   <style>
     body {
-      font-family: Georgia, sans-serif;
-      background-color: #FFB41B;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #FFB41B, #E46129);
       margin: 0;
       padding: 0;
+      color: #333;
     }
     
     h1 {
       text-align: center;
       padding: 20px;
       color: #002A28;
+      font-size: 36px;
+      text-transform: uppercase;
     }
 
     .sort-buttons {
@@ -26,12 +28,17 @@
 
     .sort-buttons a {
       margin: 0 10px;
-      padding: 10px 15px;
+      padding: 12px 20px;
       background-color: #145048;
       color: white;
       text-decoration: none;
       border-radius: 5px;
       font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .sort-buttons a:hover {
+      background-color: #0D3A36;
     }
 
     .grid-container {
@@ -43,35 +50,72 @@
     }
     
     .cat-card {
-      background-color: #E46129;
-      border: 1px solid #952710;
-      border-radius: 8px;
+      background: #fff;
+      border-radius: 10px;
       width: 300px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       text-align: center;
       padding: 15px;
-      font-family: Georgia, 'Times New Roman', Times, serif
+      transition: transform 0.3s ease-in-out;
+      overflow: hidden;
+    }
+
+    .cat-card:hover {
+      transform: translateY(-5px);
     }
     
     .cat-card img {
       width: 100%;
-      max-height: 200px;
+      height: 200px;
       object-fit: cover;
-      border-radius: 8px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .cat-card h2 {
+      font-size: 20px;
+      margin: 15px 0;
+      color: #002A28;
     }
 
     .details-link {
-      margin-top: 15px;
       text-decoration: none;
-      color: #145048;
-      font-weight: bold;
-      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    /* Stilīga poga "Apskatīt sīkāk" */
+    button {
+      background-color: #eee;
+      border: none;
+      padding: 1rem;
+      font-size: 1rem;
+      width: 10em;
+      border-radius: 1rem;
+      color: lightcoral;
+      box-shadow: 0 0.4rem #dfd9d9;
+      cursor: pointer;
+    }
+
+    button:active {
+      color: white;
+      box-shadow: 0 0.2rem #dfd9d9;
+      transform: translateY(0.2rem);
+    }
+
+    button:hover:not(:disabled) {
+      background: lightcoral;
+      color: white;
+      text-shadow: 0 0.1rem #bcb4b4;
+    }
+
+    button:disabled {
+      cursor: auto;
+      color: grey;
     }
 
     .chart-links {
       text-align: center;
       margin-top: 30px;
-      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: 18px;
     }
 
     .chart-links a {
@@ -80,35 +124,61 @@
       text-decoration: none;
       color: #145048;
       font-weight: bold;
-      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: 18px;
+      transition: 0.3s;
     }
 
-    #lightbox {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      justify-content: center;
-      align-items: center;
+    .chart-links a:hover {
+      color: #0D3A36;
+      text-decoration: underline;
     }
 
-    #lightbox img {
-      max-width: 90%;
-      max-height: 90%;
-    }
-
-    .close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 40px;
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #002A28;
       color: white;
-      cursor: pointer;
+      margin-top: 30px;
     }
 
+    /* Stilīgā lejupielādes poga */
+    .cssbuttons-io-button {
+      display: flex;
+      align-items: center;
+      font-family: inherit;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 17px;
+      padding: 0.8em 1.5em 0.8em 1.2em;
+      color: white;
+      background: #ad5389;
+      background: linear-gradient(
+        0deg,
+        rgba(77, 54, 208, 1) 0%,
+        rgba(132, 116, 254, 1) 100%
+      );
+      border: none;
+      box-shadow: 0 0.7em 1.5em -0.5em #4d36d0be;
+      letter-spacing: 0.05em;
+      border-radius: 20em;
+      transition: 0.3s ease-in-out;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .cssbuttons-io-button svg {
+      margin-right: 8px;
+    }
+
+    .cssbuttons-io-button:hover {
+      box-shadow: 0 0.5em 1.5em -0.5em #4d36d0be;
+    }
+
+    .cssbuttons-io-button:active {
+      box-shadow: 0 0.3em 1em -0.5em #4d36d0be;
+    }
   </style>
 </head>
 <body>
@@ -126,7 +196,7 @@
       <img src="{{ cat['Attēls'] }}" alt="{{ cat['Nosaukums'] }}">
       <h2>{{ cat['Nosaukums'] }}</h2>
       <a href="{{ url_for('cat_detail', name=cat['Nosaukums'].replace(' ', '-')) }}" class="details-link">
-        Apskatīt sīkāk
+        <button>Apskatīt sīkāk</button>
       </a>
     </div>
     {% endfor %}
@@ -134,33 +204,33 @@
 
   <div class="chart-links">
     <h2>Analītiskās diagrammas</h2>
-    <a href="#" onclick="openLightbox('/image/ekoloģija.jpg')">Biotops un ekoloģija</a>
-    <a href="#" onclick="openLightbox('/image/gads.jpg')">Pēdējās novērtēšanas gads</a>
-    <a href="#" onclick="openLightbox('/image/mēnesis.jpg')">Pēdējās novērtēšanas mēnesis</a>
-    <a href="#" onclick="openLightbox('/image/apdraudejums.jpg')">Apdraudējums</a>
+    <a href="/image/ekoloģija.jpg">Biotops un ekoloģija</a>
+    <a href="/image/gads.jpg">Pēdējās novērtēšanas gads</a>
+    <a href="/image/mēnesis.jpg">Pēdējās novērtēšanas mēnesis</a>
+    <a href="/image/apdraudejums.jpg">Apdraudējums</a>
   </div>
 
-  <div style="text-align: center; margin-top: 30px;">
-      <a href="/comments" style="text-decoration: none; font-weight: bold; color: #145048;">
-          Rakstīt komentāru
-      </a>
+  <div class="footer">
+      <p>© 2025 Sarkanās Grāmatas Kaķi | Mums nav tiesību | Dati tika ievākti manuāli
+      </p>
   </div>
 
-  <div id="lightbox" onclick="closeLightbox()">
-    <span class="close">&times;</span>
-    <img id="lightbox-img" src="">
-  </div>
-
-  <script>
-    function openLightbox(imageSrc) {
-      document.getElementById("lightbox-img").src = imageSrc;
-      document.getElementById("lightbox").style.display = "flex";
-    }
-
-    function closeLightbox() {
-      document.getElementById("lightbox").style.display = "none";
-    }
-  </script>
+  <!-- Stilīgā Excel lejupielādes poga -->
+  <button class="cssbuttons-io-button" onclick="window.location.href='/download'">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+    >
+      <path fill="none" d="M0 0h24v24H0z"></path>
+      <path
+        fill="currentColor"
+        d="M1 14.5a6.496 6.496 0 0 1 3.064-5.519 8.001 8.001 0 0 1 15.872 0 6.5 6.5 0 0 1-2.936 12L7 21c-3.356-.274-6-3.078-6-6.5zm15.848 4.487a4.5 4.5 0 0 0 2.03-8.309l-.807-.503-.12-.942a6.001 6.001 0 0 0-11.903 0l-.12.942-.805.503a4.5 4.5 0 0 0 2.029 8.309l.173.013h9.35l.173-.013zM13 12h3l-4 5-4-5h3V8h2v4z"
+      ></path>
+    </svg>
+    <span>Lejupielādēt</span>
+  </button>
 
 </body>
 </html>
