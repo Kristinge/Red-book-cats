@@ -41,17 +41,34 @@
         }
 
         .submit-btn {
-            background-color: #006863;
-            color: #00e7dc;
+            background-color: #eee;
             border: none;
-            padding: 10px 15px;
+            padding: 1rem;
+            font-size: 1rem;
+            width: 12em;
+            border-radius: 1rem;
+            color: lightcoral;
+            box-shadow: 0 0.4rem #dfd9d9;
             cursor: pointer;
-            margin-top: 10px;
-            border-radius: 5px;
+            margin-top: 20px;
+            transition: all 0.2s ease-in-out;
         }
 
-        .submit-btn:hover {
-            background-color: #006863;
+        .submit-btn:active {
+            color: white;
+            box-shadow: 0 0.2rem #dfd9d9;
+            transform: translateY(0.2rem);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: lightcoral;
+            color: white;
+            text-shadow: 0 0.1rem #bcb4b4;
+        }
+
+        .submit-btn:disabled {
+            cursor: auto;
+            color: grey;
         }
 
         .comment-list {
@@ -143,6 +160,7 @@
         <form method="POST">
             <textarea name="comment" placeholder="Ieraksti savu komentāru..." required></textarea>
             <br>
+            <!-- Stilīgā poga "Pievienot komentāru" -->
             <button type="submit" class="submit-btn">Pievienot komentāru</button>
         </form>
     </div>
