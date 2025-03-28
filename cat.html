@@ -6,47 +6,151 @@
     <title>{{ cat['Nosaukums'] }}</title>
     <style>
         body {
-            background-color: #FFB41B;
+            background: linear-gradient(135deg, #FFB41B, #E46129);
             font-family: Arial, sans-serif;
             text-align: center;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
         .container {
-            width: 50%;
-            margin: 0 auto;
+            width: 60%;
+            margin: 40px auto;
             text-align: left;
-            border: 1px solid #952710;
+            border: 2px solid #952710;
             padding: 20px;
-            border-radius: 8px;
-            background-color: #E46129;
+            border-radius: 10px;
+            background: #FFF;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         h1 {
             font-family: Georgia, 'Times New Roman', Times, serif;
             color: #002A28;
+            text-align: center;
         }
         p {
             font-size: 18px;
+            line-height: 1.6;
         }
         .back {
-            margin-top: 20px;
             display: block;
+            margin-top: 20px;
             font-size: 16px;
-            text-decoration: none;
-            color: #145048;
+            padding: 1rem;
+            font-weight: bold;
+            width: 10em;
+            border-radius: 1rem;
+            color: lightcoral;
+            box-shadow: 0 0.4rem #dfd9d9;
+            background-color: #eee;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.3s ease-in-out;
         }
-        .back:hover {
-            text-decoration: underline;
+        .back:active {
+            color: white;
+            box-shadow: 0 0.2rem #dfd9d9;
+            transform: translateY(0.2rem);
+        }
+        .back:hover:not(:disabled) {
+            background: lightcoral;
+            color: white;
+            text-shadow: 0 0.1rem #bcb4b4;
+        }
+        .cat-image {
+            display: block;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            border: 2px solid #952710;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .comment-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #F8F8F8;
+            border-radius: 10px;
+        }
+        .comment-section h2 {
+            color: #002A28;
+            text-align: center;
+        }
+        .comment-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+            resize: none;
+            font-size: 16px;
+        }
+        .comment-submit {
+            display: block;
+            margin: 15px auto;
+            background: #145048;
+            color: white;
+            font-size: 16px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .comment-submit:hover {
+            background: #0D3A36;
+        }
+        .comment-list {
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+        .comment-list li {
+            background: white;
+            border: 1px solid #CCC;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
         <h1>{{ cat['Nosaukums'] }}</h1>
+        
+        <img src="{{ cat['Attēls'] }}" alt="{{ cat['Nosaukums'] }}" class="cat-image">
+
         <p><strong>Biotops un ekoloģija:</strong> {{ cat['Biotops un ekoloģija'] }}</p>
         <p><strong>Pēdējās novērtēšanas datums:</strong> {{ cat['Pēdējās novērtēšanas gads'] }}-{{ cat['Pēdējās novērtēšanas mēnesis'] }}</p>
         <p><strong>Valstis:</strong> {{ cat['Valstis'] }}</p>
         <p><strong>Apdraudējums:</strong> {{ cat['Apdraudējums'] }}</p>
         <p><strong>Skaits savvaļā:</strong> {{ cat['Skaits savvaļā'] }}</p>
-        <a href="{{ url_for('home') }}" class="back">Atpakaļ uz sarakstu</a>
+
+        <form action="{{ url_for('home') }}" method="get">
+            <button class="back">Atpakaļ uz sarakstu</button>
+        </form>
     </div>
+
+    <div class="container comment-section">
+        <h2>💬 Komentāri</h2>
+        
+        <form method="POST" action="{{ url_for('comments') }}">
+            <textarea name="comment" class="comment-box" rows="4" placeholder="Ievadiet savu komentāru..." required></textarea>
+            <button type="submit" class="comment-submit">Pievienot komentāru</button>
+        </form>
+
+        {% if comments %}
+        <ul class="comment-list">
+            {% for comment in comments %}
+            <li>{{ comment }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Nav pievienotu komentāru.</p>
+        {% endif %}
+    </div>
+
 </body>
 </html>
+
